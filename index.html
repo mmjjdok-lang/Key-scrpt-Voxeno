@@ -31,7 +31,6 @@
             background-image: radial-gradient(circle at 50% 10%, #0a1128 0%, #05050a 80%);
         }
 
-        /* Header & Points Bar */
         header {
             display: flex;
             justify-content: space-between;
@@ -72,7 +71,6 @@
             text-shadow: 0 0 8px var(--neon-blue);
         }
 
-        /* Main Container */
         .container {
             max-width: 1200px;
             margin: 30px auto;
@@ -88,7 +86,6 @@
             padding-left: 15px;
         }
 
-        /* Navigation / Action Cards */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -123,7 +120,6 @@
             margin-bottom: 20px;
         }
 
-        /* Buttons */
         .neon-btn {
             background: transparent;
             color: var(--neon-blue);
@@ -155,7 +151,6 @@
             text-shadow: none;
         }
 
-        /* Keys Shop Grid (15 Keys) */
         .keys-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -190,7 +185,25 @@
             margin-bottom: 12px;
         }
 
-        /* Script Input Section */
+        /* Active Key Status Box */
+        .key-status-section {
+            background: var(--card-bg);
+            border: 1px solid var(--neon-blue);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 40px;
+            box-shadow: var(--neon-glow);
+            text-align: center;
+        }
+
+        .key-status-label {
+            font-size: 1.2rem;
+            color: var(--neon-blue);
+            margin-top: 10px;
+            font-weight: bold;
+            text-shadow: 0 0 8px var(--neon-blue);
+        }
+
         .script-section {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -202,18 +215,19 @@
 
         .script-input-group {
             display: flex;
+            flex-direction: column;
             gap: 15px;
             margin-top: 15px;
         }
 
         .script-input {
-            flex: 1;
+            width: 100%;
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid var(--border-color);
             padding: 12px 20px;
             border-radius: 8px;
             color: var(--text-main);
-            font-size: 1rem;
+            font-size: 0.95rem;
             outline: none;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
         }
@@ -223,7 +237,6 @@
             box-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
         }
 
-        /* Modals / Pages Overlay */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -244,7 +257,7 @@
             border-radius: 20px;
             padding: 35px;
             width: 90%;
-            max-width: 600px;
+            max-width: 650px;
             box-shadow: var(--neon-glow-strong);
             text-align: center;
             position: relative;
@@ -261,8 +274,8 @@
 
         .tasks-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
             margin-top: 20px;
             margin-bottom: 20px;
         }
@@ -270,11 +283,12 @@
         .task-btn {
             background: rgba(0, 243, 255, 0.05);
             border: 1px solid var(--border-color);
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             color: var(--text-main);
             cursor: pointer;
             font-weight: bold;
+            font-size: 0.9rem;
             transition: 0.3s;
         }
 
@@ -297,7 +311,6 @@
             font-weight: bold;
         }
 
-        /* Notifications / Alerts */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -331,8 +344,8 @@
         <h2 class="section-title">Earning Hub</h2>
         <div class="dashboard-grid">
             <div class="action-card">
-                <h3>Task Wall (4 Tasks)</h3>
-                <p>Complete 4 tasks (LootLabs, etc.) with a 20-second timer per task to earn +2 Points.</p>
+                <h3>Task Wall (6 Tasks)</h3>
+                <p>Complete 6 tasks (LootLabs) with a 30-second timer per task to earn +2 Points.</p>
                 <button class="neon-btn" onclick="openTasksModal()">Start Tasks</button>
             </div>
             <div class="action-card">
@@ -345,57 +358,62 @@
         <!-- 15 Keys Shop -->
         <h2 class="section-title">Keys Shop (Geometric Progression)</h2>
         <div class="keys-grid" id="keysGrid">
-            <!-- Dynamically generated via JavaScript -->
+            <!-- Dynamically generated -->
+        </div>
+
+        <!-- Active Key Status & Expiry Label -->
+        <div class="key-status-section">
+            <h3 style="color: var(--text-muted); font-size: 1rem; margin-bottom: 5px;">ACTIVE KEY STATUS & EXPIRY</h3>
+            <div class="key-status-label" id="keyStatusLabel">No active key generated yet. Buy a key above!</div>
         </div>
 
         <!-- Script Integration Section -->
         <div class="script-section">
-            <h2 class="section-title" style="margin-bottom: 10px; border:none; padding:0;">Script Auto-Login Portal</h2>
-            <p style="color: var(--text-muted);">Paste your key and script below. The system will auto-apply your key and launch automatically.</p>
+            <h2 class="section-title" style="margin-bottom: 10px; border:none; padding:0;">Roblox Lua Script Integration</h2>
+            <p style="color: var(--text-muted); margin-bottom: 15px;">Use the one-liner Lua function below in your script. It automatically fetches your active key from the website. If no key is provided or valid, the script will not execute.</p>
+            
             <div class="script-input-group">
-                <input type="text" id="keyInput" class="script-input" placeholder="Paste your generated key here...">
-                <input type="text" id="scriptInput" class="script-input" placeholder="Paste your script execution command...">
-                <button class="neon-btn" style="width: auto;" onclick="launchScript()">Launch Script</button>
+                <label style="color: var(--neon-blue); font-size: 0.9rem;">One-Liner Lua Function:</label>
+                <input type="text" readonly class="script-input" style="font-family: monospace; color: var(--neon-blue);" value="local success, key = pcall(function() return game:HttpGet('https://your-website-domain.com/get-active-key') end); if not success or key == '' then return warn('Invalid or Missing Key!') end; print('Key Loaded Successfully!')">
             </div>
         </div>
 
     </div>
 
-    <!-- Tasks Modal / Page -->
+    <!-- Tasks Modal (6 Tasks / 30s) -->
     <div class="modal-overlay" id="tasksModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeTasksModal()">&times;</span>
-            <h2 style="color: var(--neon-blue); margin-bottom: 10px;">Complete 4 Tasks</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Click each task button, wait for the 20-second timer to complete, then claim your +2 points reward.</p>
+            <h2 style="color: var(--neon-blue); margin-bottom: 10px;">Complete 6 Tasks</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Click each task button, wait for the 30-second timer to complete, then claim your +2 points reward.</p>
             
             <div class="tasks-grid" id="tasksGridContainer">
-                <button class="task-btn" onclick="startTask(1)" id="tBtn1">Task 1 (LootLabs)</button>
-                <button class="task-btn" onclick="startTask(2)" id="tBtn2">Task 2 (LootLabs)</button>
-                <button class="task-btn" onclick="startTask(3)" id="tBtn3">Task 3 (LootLabs)</button>
-                <button class="task-btn" onclick="startTask(4)" id="tBtn4">Task 4 (LootLabs)</button>
+                <button class="task-btn" onclick="startTask(1)" id="tBtn1">Task 1</button>
+                <button class="task-btn" onclick="startTask(2)" id="tBtn2">Task 2</button>
+                <button class="task-btn" onclick="startTask(3)" id="tBtn3">Task 3</button>
+                <button class="task-btn" onclick="startTask(4)" id="tBtn4">Task 4</button>
+                <button class="task-btn" onclick="startTask(5)" id="tBtn5">Task 5</button>
+                <button class="task-btn" onclick="startTask(6)" id="tBtn6">Task 6</button>
             </div>
 
-            <div class="timer-display" id="timerDisplay" style="display: none;">Waiting: <span id="timeLeft">20</span>s</div>
+            <div class="timer-display" id="timerDisplay" style="display: none;">Waiting: <span id="timeLeft">30</span>s</div>
             <button class="neon-btn" id="claimTaskRewardBtn" onclick="claimTasksReward()" disabled style="margin-top: 15px;">Claim +2 Points Reward</button>
         </div>
     </div>
 
-    <!-- Notification Toast -->
     <div class="toast" id="toastMessage">Notification message</div>
 
     <script>
-        // State Management
         let userPoints = 0;
         let tiktokClaimed = false;
         let completedTasksCount = 0;
         let activeTaskTimer = null;
+        let currentActiveKey = null;
 
-        // Update Points UI
         function updatePointsUI() {
             document.getElementById('userPoints').textContent = userPoints;
         }
 
-        // Show Toast Notification
         function showToast(message) {
             const toast = document.getElementById('toastMessage');
             toast.textContent = message;
@@ -405,16 +423,10 @@
             }, 3000);
         }
 
-        // Initialize 15 Keys with Geometric Progression
-        // Formula: Day X -> Cost = X * 2 (or precise geometric scaling)
+        // Initialize 15 Keys Shop
         const keysGrid = document.getElementById('keysGrid');
-        const keysData = [];
-
         for (let i = 1; i <= 15; i++) {
-            // Geometric / Progressive calculation: e.g., Days * 2 points (or exponential progression)
-            let cost = i * 2 * Math.max(1, Math.floor(i / 3)); // Precise progressive formula
-            keysData.push({ days: i, cost: cost });
-
+            let cost = i * 2 * Math.max(1, Math.floor(i / 3));
             const card = document.createElement('div');
             card.className = 'key-card';
             card.innerHTML = `
@@ -425,52 +437,34 @@
             keysGrid.appendChild(card);
         }
 
-        // Buy Key Function (Manual Trigger, Checks points)
+        // Buy Key & Set Expiry Label instead of direct plain key alert
         function buyKey(days, cost) {
             if (userPoints >= cost) {
                 userPoints -= cost;
                 updatePointsUI();
+
+                currentActiveKey = 'VX-' + Math.random().toString(36).substring(2, 8).toUpperCase();
                 
-                // Generate a random professional key
-                const generatedKey = 'VX-' + Math.random().toString(36).substring(2, 8).toUpperCase() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+                // Calculate Expiry Date / Time label
+                const expiryDate = new Date(new Date().getTime() + days * 24 * 60 * 60 * 1000);
+                const labelText = `Active Key: ${currentActiveKey} | Expires in: ${days} Day(s) (${expiryDate.toLocaleDateString()})`;
                 
-                // Put key automatically into script input box
-                document.getElementById('keyInput').value = generatedKey;
-                showToast(`Success! Generated ${days}-Day Key and placed it in the script box.`);
+                document.getElementById('keyStatusLabel').textContent = labelText;
+                showToast(`Success! ${days}-Day Key activated on the website.`);
             } else {
                 showToast(`Not enough points! You need ${cost} points.`);
             }
         }
 
-        // Launch Script function
-        function launchScript() {
-            const key = document.getElementById('keyInput').value.trim();
-            const script = document.getElementById('scriptInput').value.trim();
-
-            if (!key) {
-                showToast('Please get a key first by clicking a key button!');
-                return;
-            }
-            if (!script) {
-                showToast('Please enter your script command!');
-                return;
-            }
-
-            showToast('Key applied & Script injected successfully! Launching...');
-            // Simulated automatic execution
-        }
-
-        // TikTok Reward Function (One-time check)
+        // TikTok Reward
         function claimTikTok() {
             if (tiktokClaimed) {
                 showToast('You have already claimed your TikTok reward!');
                 return;
             }
 
-            // Open TikTok link specifically to Voxeno scrpt
             window.open('https://www.tiktok.com/@Voxeno_scrpt', '_blank');
 
-            // Verification simulation
             setTimeout(() => {
                 tiktokClaimed = true;
                 userPoints += 2;
@@ -491,21 +485,14 @@
             document.getElementById('tasksModal').style.display = 'none';
         }
 
-        let currentActiveTaskButton = null;
-
         function startTask(taskNum) {
             const btn = document.getElementById(`tBtn${taskNum}`);
             if (btn.disabled) return;
 
-            currentActiveTaskButton = btn;
-            
-            // Open LootLabs or task link simulator
             window.open('https://loot-labs.org', '_blank');
-
-            // Disable all task buttons temporarily during timer
             toggleTaskButtons(false);
             
-            let timeLeft = 20;
+            let timeLeft = 30; // 30 seconds timer as requested
             const timerDisplay = document.getElementById('timerDisplay');
             const timeLeftSpan = document.getElementById('timeLeft');
             timerDisplay.style.display = 'block';
@@ -518,23 +505,22 @@
                 if (timeLeft <= 0) {
                     clearInterval(activeTaskTimer);
                     timerDisplay.style.display = 'none';
-                    currentActiveTaskButton.textContent = 'Completed ✔';
-                    currentActiveTaskButton.disabled = true;
+                    btn.textContent = 'Completed ✔';
+                    btn.disabled = true;
                     completedTasksCount++;
 
                     toggleTaskButtons(true);
 
-                    // Check if all 4 tasks are done
-                    if (completedTasksCount >= 4) {
+                    if (completedTasksCount >= 6) {
                         document.getElementById('claimTaskRewardBtn').disabled = false;
-                        showToast('All 4 tasks completed! You can now claim your +2 points.');
+                        showToast('All 6 tasks completed! You can now claim your +2 points.');
                     }
                 }
             }, 1000);
         }
 
         function toggleTaskButtons(enable) {
-            for (let i = 1; i <= 4; i++) {
+            for (let i = 1; i <= 6; i++) {
                 const b = document.getElementById(`tBtn${i}`);
                 if (!b.textContent.includes('✔')) {
                     b.disabled = !enable;
@@ -543,18 +529,17 @@
         }
 
         function claimTasksReward() {
-            if (completedTasksCount >= 4) {
+            if (completedTasksCount >= 6) {
                 userPoints += 2;
                 updatePointsUI();
                 showToast('Reward claimed! +2 Points added.');
                 closeTasksModal();
                 
-                // Reset tasks state for future earning if desired
                 completedTasksCount = 0;
                 document.getElementById('claimTaskRewardBtn').disabled = true;
-                for (let i = 1; i <= 4; i++) {
+                for (let i = 1; i <= 6; i++) {
                     const b = document.getElementById(`tBtn${i}`);
-                    b.textContent = `Task ${i} (LootLabs)`;
+                    b.textContent = `Task ${i}`;
                     b.disabled = false;
                 }
             }
