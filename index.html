@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voxeno Script - Portal</title>
+    <style>
+        :root {
+            --bg-color: #05050a;
+            --card-bg: rgba(10, 15, 30, 0.7);
+            --neon-blue: #00f3ff;
+            --neon-glow: 0 0 15px rgba(0, 243, 255, 0.5), inset 0 0 15px rgba(0, 243, 255, 0.2);
+            --neon-glow-strong: 0 0 25px rgba(0, 243, 255, 0.8);
+            --text-main: #ffffff;
+            --text-muted: #a0a0c0;
+            --border-color: rgba(0, 243, 255, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 10%, #0a1128 0%, #05050a 80%);
+        }
+
+        /* Header & Points Bar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(5, 5, 10, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+            letter-spacing: 2px;
+        }
+
+        .points-display {
+            background: var(--card-bg);
+            border: 1px solid var(--neon-blue);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            box-shadow: var(--neon-glow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .points-display span {
+            color: var(--neon-blue);
+            font-weight: bold;
+            font-size: 1.3rem;
+            text-shadow: 0 0 8px var(--neon-blue);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--neon-blue);
+            text-shadow: 0 0 8px var(--neon-blue);
+            border-left: 4px solid var(--neon-blue);
+            padding-left: 15px;
+        }
+
+        /* Navigation / Action Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .action-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: var(--neon-glow);
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: var(--neon-glow-strong);
+            transform: translateY(-5px);
+        }
+
+        .action-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .action-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
+        .neon-btn {
+            background: transparent;
+            color: var(--neon-blue);
+            border: 2px solid var(--neon-blue);
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-shadow: 0 0 5px var(--neon-blue);
+            box-shadow: var(--neon-glow);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .neon-btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-color);
+            box-shadow: var(--neon-glow-strong);
+            text-shadow: none;
+        }
+
+        .neon-btn:disabled {
+            border-color: #444;
+            color: #666;
+            box-shadow: none;
+            cursor: not-allowed;
+            background: transparent;
+            text-shadow: none;
+        }
+
+        /* Keys Shop Grid (15 Keys) */
+        .keys-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .key-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: var(--neon-glow);
+            transition: 0.3s;
+        }
+
+        .key-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: var(--neon-glow-strong);
+        }
+
+        .key-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--neon-blue);
+        }
+
+        .key-card .cost {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        /* Script Input Section */
+        .script-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: var(--neon-glow);
+        }
+
+        .script-input-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .script-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        .script-input:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+        }
+
+        /* Modals / Pages Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 10, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #0a0f1e;
+            border: 2px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 35px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: var(--neon-glow-strong);
+            text-align: center;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--neon-blue);
+            cursor: pointer;
+        }
+
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .task-btn {
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 10px;
+            color: var(--text-main);
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .task-btn:hover:not(:disabled) {
+            background: rgba(0, 243, 255, 0.2);
+            border-color: var(--neon-blue);
+            box-shadow: var(--neon-glow);
+        }
+
+        .task-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: #333;
+        }
+
+        .timer-display {
+            font-size: 1.2rem;
+            color: var(--neon-blue);
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        /* Notifications / Alerts */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #0a0f1e;
+            border: 1px solid var(--neon-blue);
+            color: var(--text-main);
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: var(--neon-glow-strong);
+            z-index: 3000;
+            display: none;
+            animation: fadeInOut 3s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">VOXENO SCRIPT</div>
+        <div class="points-display">
+            Points: <span id="userPoints">0</span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Quick Earn & Social Rewards -->
+        <h2 class="section-title">Earning Hub</h2>
+        <div class="dashboard-grid">
+            <div class="action-card">
+                <h3>Task Wall (4 Tasks)</h3>
+                <p>Complete 4 tasks (LootLabs, etc.) with a 20-second timer per task to earn +2 Points.</p>
+                <button class="neon-btn" onclick="openTasksModal()">Start Tasks</button>
+            </div>
+            <div class="action-card">
+                <h3>TikTok Reward</h3>
+                <p>Subscribe to our official TikTok account <b>@Voxeno_scrpt</b> to claim +2 Points instantly.</p>
+                <button class="neon-btn" id="tiktokBtn" onclick="claimTikTok()">Claim TikTok Reward</button>
+            </div>
+        </div>
+
+        <!-- 15 Keys Shop -->
+        <h2 class="section-title">Keys Shop (Geometric Progression)</h2>
+        <div class="keys-grid" id="keysGrid">
+            <!-- Dynamically generated via JavaScript -->
+        </div>
+
+        <!-- Script Integration Section -->
+        <div class="script-section">
+            <h2 class="section-title" style="margin-bottom: 10px; border:none; padding:0;">Script Auto-Login Portal</h2>
+            <p style="color: var(--text-muted);">Paste your key and script below. The system will auto-apply your key and launch automatically.</p>
+            <div class="script-input-group">
+                <input type="text" id="keyInput" class="script-input" placeholder="Paste your generated key here...">
+                <input type="text" id="scriptInput" class="script-input" placeholder="Paste your script execution command...">
+                <button class="neon-btn" style="width: auto;" onclick="launchScript()">Launch Script</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Tasks Modal / Page -->
+    <div class="modal-overlay" id="tasksModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeTasksModal()">&times;</span>
+            <h2 style="color: var(--neon-blue); margin-bottom: 10px;">Complete 4 Tasks</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Click each task button, wait for the 20-second timer to complete, then claim your +2 points reward.</p>
+            
+            <div class="tasks-grid" id="tasksGridContainer">
+                <button class="task-btn" onclick="startTask(1)" id="tBtn1">Task 1 (LootLabs)</button>
+                <button class="task-btn" onclick="startTask(2)" id="tBtn2">Task 2 (LootLabs)</button>
+                <button class="task-btn" onclick="startTask(3)" id="tBtn3">Task 3 (LootLabs)</button>
+                <button class="task-btn" onclick="startTask(4)" id="tBtn4">Task 4 (LootLabs)</button>
+            </div>
+
+            <div class="timer-display" id="timerDisplay" style="display: none;">Waiting: <span id="timeLeft">20</span>s</div>
+            <button class="neon-btn" id="claimTaskRewardBtn" onclick="claimTasksReward()" disabled style="margin-top: 15px;">Claim +2 Points Reward</button>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toastMessage">Notification message</div>
+
+    <script>
+        // State Management
+        let userPoints = 0;
+        let tiktokClaimed = false;
+        let completedTasksCount = 0;
+        let activeTaskTimer = null;
+
+        // Update Points UI
+        function updatePointsUI() {
+            document.getElementById('userPoints').textContent = userPoints;
+        }
+
+        // Show Toast Notification
+        function showToast(message) {
+            const toast = document.getElementById('toastMessage');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize 15 Keys with Geometric Progression
+        // Formula: Day X -> Cost = X * 2 (or precise geometric scaling)
+        const keysGrid = document.getElementById('keysGrid');
+        const keysData = [];
+
+        for (let i = 1; i <= 15; i++) {
+            // Geometric / Progressive calculation: e.g., Days * 2 points (or exponential progression)
+            let cost = i * 2 * Math.max(1, Math.floor(i / 3)); // Precise progressive formula
+            keysData.push({ days: i, cost: cost });
+
+            const card = document.createElement('div');
+            card.className = 'key-card';
+            card.innerHTML = `
+                <h4>${i} Day${i > 1 ? 's' : ''} Key</h4>
+                <div class="cost">Cost: ${cost} Points</div>
+                <button class="neon-btn" onclick="buyKey(${i}, ${cost})">Get Key</button>
+            `;
+            keysGrid.appendChild(card);
+        }
+
+        // Buy Key Function (Manual Trigger, Checks points)
+        function buyKey(days, cost) {
+            if (userPoints >= cost) {
+                userPoints -= cost;
+                updatePointsUI();
+                
+                // Generate a random professional key
+                const generatedKey = 'VX-' + Math.random().toString(36).substring(2, 8).toUpperCase() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+                
+                // Put key automatically into script input box
+                document.getElementById('keyInput').value = generatedKey;
+                showToast(`Success! Generated ${days}-Day Key and placed it in the script box.`);
+            } else {
+                showToast(`Not enough points! You need ${cost} points.`);
+            }
+        }
+
+        // Launch Script function
+        function launchScript() {
+            const key = document.getElementById('keyInput').value.trim();
+            const script = document.getElementById('scriptInput').value.trim();
+
+            if (!key) {
+                showToast('Please get a key first by clicking a key button!');
+                return;
+            }
+            if (!script) {
+                showToast('Please enter your script command!');
+                return;
+            }
+
+            showToast('Key applied & Script injected successfully! Launching...');
+            // Simulated automatic execution
+        }
+
+        // TikTok Reward Function (One-time check)
+        function claimTikTok() {
+            if (tiktokClaimed) {
+                showToast('You have already claimed your TikTok reward!');
+                return;
+            }
+
+            // Open TikTok link specifically to Voxeno scrpt
+            window.open('https://www.tiktok.com/@Voxeno_scrpt', '_blank');
+
+            // Verification simulation
+            setTimeout(() => {
+                tiktokClaimed = true;
+                userPoints += 2;
+                updatePointsUI();
+                const btn = document.getElementById('tiktokBtn');
+                btn.textContent = 'Claimed ✔';
+                btn.disabled = true;
+                showToast('TikTok subscription verified! +2 Points added.');
+            }, 2000);
+        }
+
+        // Tasks Modal Controls
+        function openTasksModal() {
+            document.getElementById('tasksModal').style.display = 'flex';
+        }
+
+        function closeTasksModal() {
+            document.getElementById('tasksModal').style.display = 'none';
+        }
+
+        let currentActiveTaskButton = null;
+
+        function startTask(taskNum) {
+            const btn = document.getElementById(`tBtn${taskNum}`);
+            if (btn.disabled) return;
+
+            currentActiveTaskButton = btn;
+            
+            // Open LootLabs or task link simulator
+            window.open('https://loot-labs.org', '_blank');
+
+            // Disable all task buttons temporarily during timer
+            toggleTaskButtons(false);
+            
+            let timeLeft = 20;
+            const timerDisplay = document.getElementById('timerDisplay');
+            const timeLeftSpan = document.getElementById('timeLeft');
+            timerDisplay.style.display = 'block';
+            timeLeftSpan.textContent = timeLeft;
+
+            activeTaskTimer = setInterval(() => {
+                timeLeft--;
+                timeLeftSpan.textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(activeTaskTimer);
+                    timerDisplay.style.display = 'none';
+                    currentActiveTaskButton.textContent = 'Completed ✔';
+                    currentActiveTaskButton.disabled = true;
+                    completedTasksCount++;
+
+                    toggleTaskButtons(true);
+
+                    // Check if all 4 tasks are done
+                    if (completedTasksCount >= 4) {
+                        document.getElementById('claimTaskRewardBtn').disabled = false;
+                        showToast('All 4 tasks completed! You can now claim your +2 points.');
+                    }
+                }
+            }, 1000);
+        }
+
+        function toggleTaskButtons(enable) {
+            for (let i = 1; i <= 4; i++) {
+                const b = document.getElementById(`tBtn${i}`);
+                if (!b.textContent.includes('✔')) {
+                    b.disabled = !enable;
+                }
+            }
+        }
+
+        function claimTasksReward() {
+            if (completedTasksCount >= 4) {
+                userPoints += 2;
+                updatePointsUI();
+                showToast('Reward claimed! +2 Points added.');
+                closeTasksModal();
+                
+                // Reset tasks state for future earning if desired
+                completedTasksCount = 0;
+                document.getElementById('claimTaskRewardBtn').disabled = true;
+                for (let i = 1; i <= 4; i++) {
+                    const b = document.getElementById(`tBtn${i}`);
+                    b.textContent = `Task ${i} (LootLabs)`;
+                    b.disabled = false;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
